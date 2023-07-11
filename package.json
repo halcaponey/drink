@@ -1,0 +1,15 @@
+{
+  "name": "drink",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "source": "src",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^4.4.0"
+  }
+}
