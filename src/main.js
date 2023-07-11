@@ -24,18 +24,19 @@ const applyHeights = () => {
 applyHeights();
 
 const s /* col width */ = 1;
-const c /* wave speed */ = 0.1;
+const c /* wave speed */ = 0.05;
 const k = c ** 2 / s ** 2;
 const velDamping = 0.3;
 
 const stabilityCheck = (deltaTime) => {
   if (deltaTime * c < s) {
-    return;
+    return true;
   }
   console.error("simulation unstable", {
     "deltaTime * c": deltaTime * c,
     s: s,
   });
+  return false;
 };
 
 const lerp = (a, b, t) => (b - a) * t + a;
@@ -44,7 +45,14 @@ const remap = (a1, b1, a2, b2, t) => lerp(a2, b2, unlerp(a1, b1, t));
 
 let a = 0;
 addEventListener("mousemove", (e) => {
-  a = -remap(0, window.innerWidth, -1, 1, e.x);
+  a = remap(0, window.innerWidth, 1, -1, e.x);
+  document.querySelector(
+    "#glass"
+  ).style.transform = `translate(-50%, -50%) rotate(${-45 * a}deg)`;
+});
+
+addEventListener("deviceorientation", (e) => {
+  a = remap(-90, 90, 1, -1, e.gamma);
   document.querySelector(
     "#glass"
   ).style.transform = `translate(-50%, -50%) rotate(${-45 * a}deg)`;
@@ -59,19 +67,17 @@ const simstep = (deltaTime) => {
     curr.velocity += deltaTime * accel;
   }
 
-  if (a != null) {
-    for (let index = 0; index < cols.length; index++) {
-      const curr = cols[index];
-      const wantedHeight = remap(
-        -1,
-        1,
-        5,
-        195,
-        a * remap(0, cols.length, -1, 1, index)
-      );
-      const accel = k * (wantedHeight - curr.height) * 0.001;
-      curr.velocity += deltaTime * accel;
-    }
+  for (let index = 0; index < cols.length; index++) {
+    const curr = cols[index];
+    const wantedHeight = remap(
+      -1,
+      1,
+      5,
+      195,
+      a * remap(0, cols.length, -1, 1, index)
+    );
+    const accel = k * (wantedHeight - curr.height) * 0.001;
+    curr.velocity += deltaTime * accel;
   }
 
   const vd = Math.max(0.0, 1.0 - (velDamping * deltaTime) / 1000);
@@ -82,7 +88,10 @@ const simstep = (deltaTime) => {
     curr.height += deltaTime * curr.velocity;
   }
 
-  stabilityCheck(deltaTime);
+  const isStable = stabilityCheck(deltaTime);
+  document.querySelector("body").style.backgroundColor = isStable
+    ? "white"
+    : "red";
 
   applyHeights();
 };
