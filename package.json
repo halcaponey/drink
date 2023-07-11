@@ -5,10 +5,9 @@
   "type": "module",
   "source": "src",
   "scripts": {
-    "dev": "vite",
-    "devhost": "vite --host",
+    "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite --host preview"
   },
   "devDependencies": {
     "vite": "^4.4.0"

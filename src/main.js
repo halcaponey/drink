@@ -43,19 +43,23 @@ const lerp = (a, b, t) => (b - a) * t + a;
 const unlerp = (a, b, t) => (t - a) / (b - a);
 const remap = (a1, b1, a2, b2, t) => lerp(a2, b2, unlerp(a1, b1, t));
 
+const on = (name, callback) => {
+  addEventListener(name, callback);
+  return () => removeEventListener(name, callback);
+};
+
 let a = 0;
-addEventListener("mousemove", (e) => {
+
+const unsubscribeMouseMove = on("mousemove", (e) => {
   a = remap(0, window.innerWidth, 1, -1, e.x);
   document.querySelector(
     "#glass"
   ).style.transform = `translate(-50%, -50%) rotate(${-45 * a}deg)`;
 });
 
-addEventListener("deviceorientation", (e) => {
+on("deviceorientation", (e) => {
   a = remap(-90, 90, 1, -1, e.gamma);
-  document.querySelector(
-    "#glass"
-  ).style.transform = `translate(-50%, -50%) rotate(${-45 * a}deg)`;
+  unsubscribeMouseMove();
 });
 
 const simstep = (deltaTime) => {
@@ -72,8 +76,8 @@ const simstep = (deltaTime) => {
     const wantedHeight = remap(
       -1,
       1,
-      5,
-      195,
+      10,
+      190,
       a * remap(0, cols.length, -1, 1, index)
     );
     const accel = k * (wantedHeight - curr.height) * 0.001;
