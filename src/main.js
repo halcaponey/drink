@@ -3,36 +3,19 @@
  * from: https://www.youtube.com/watch?v=hswBi5wcqAA
  *
  * TODO:
- *  - use svg multiline
  *  - use deviceorientation or mousemove
  */
-
-document.querySelector(".cols").innerHTML = Array.from(
-  { length: 100 },
-  () => "<div></div>"
-).join("");
-
-let cols = Array.from(document.querySelectorAll(".cols > *"));
-
-const getRandomHeight = () => Math.random() * 1 + 50;
-
-cols = cols.map((el, i) => ({
-  node: el,
-  height: getRandomHeight(), // 50 + Math.log(i + 1) * 0.5 + Math.sin(i / Math.PI) * 1,
+const cols = Array.from({ length: 100 }, () => ({
+  height: 100,
   velocity: 0,
 }));
 
 const applyHeights = () => {
-  // for (let index = 0; index < cols.length; index++) {
-  //   const curr = cols[index];
-  //   curr.node.style.height = curr.height + "%";
-  // }
-
   document.querySelector("#shape").setAttribute(
     "points",
     "85,190 15,190 " +
       cols
-        .map(({ height }, index) => `${index},${2 * height}`)
+        .map(({ height }, index) => `${index},${height}`)
         .slice(5, 95)
         .join(" ")
   );
@@ -40,16 +23,7 @@ const applyHeights = () => {
 
 applyHeights();
 
-const colMaxHeight = document
-  .querySelector(".cols")
-  .getBoundingClientRect().height;
-const colWidth = cols[0].node.getBoundingClientRect().width;
-/**
- * colMaxHeight  |  100%
- * -------------------------
- * colWidth      |  s
- */
-const s /* col width */ = (colWidth * 100) / colMaxHeight;
+const s /* col width */ = 1;
 const c /* wave speed */ = 0.1;
 const k = c ** 2 / s ** 2;
 const velDamping = 0.3;
@@ -91,8 +65,8 @@ const simstep = (deltaTime) => {
       const wantedHeight = remap(
         -1,
         1,
-        0,
-        100,
+        5,
+        195,
         a * remap(0, cols.length, -1, 1, index)
       );
       const accel = k * (wantedHeight - curr.height) * 0.001;

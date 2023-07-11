@@ -19,18 +19,3 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
-.cols {
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
-  visibility: hidden;
-}
-
-.cols > * {
-  width: 100%;
-  height: 70%;
-  /* border: 1px solid white; */
-  background-color: dodgerblue;
-  align-self: self-end;
-}
