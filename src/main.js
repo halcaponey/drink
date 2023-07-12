@@ -93,9 +93,9 @@ const simstep = (deltaTime) => {
   }
 
   const isStable = stabilityCheck(deltaTime);
-  document.querySelector("body").style.backgroundColor = isStable
-    ? "white"
-    : "red";
+  // document.querySelector("body").style.backgroundColor = isStable
+  //   ? "white"
+  //   : "red";
 
   applyHeights();
 };
