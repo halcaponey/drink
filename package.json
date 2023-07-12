@@ -6,7 +6,7 @@
   "source": "src",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build",
+    "build": "vite build --base=/drink/",
     "preview": "vite --host preview"
   },
   "devDependencies": {
